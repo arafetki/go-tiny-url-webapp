@@ -4,10 +4,14 @@ module.exports = {
     "./assets/templates/**/*.{html,templ,tmpl}"
   ],
   theme: {
+    container: {
+      center: true,
+    },
     extend: {
       fontFamily: {
       },
     },
   },
+  darkMode: "class",
   plugins: [require("tailwindcss-animate")],
 };

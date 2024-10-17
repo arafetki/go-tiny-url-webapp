@@ -12,6 +12,8 @@ require (
 	github.com/jmoiron/sqlx v1.4.0
 )
 
+require github.com/matoous/go-nanoid/v2 v2.1.0
+
 require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect

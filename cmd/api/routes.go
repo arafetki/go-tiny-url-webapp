@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/arafetki/go-tiny-url-webapp/assets"
-	"github.com/arafetki/go-tiny-url-webapp/internal/response"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
@@ -16,6 +15,10 @@ func (app *application) Routes() *chi.Mux {
 	// Middlewares
 	mux.Use(middleware.Logger)
 	mux.Use(middleware.Recoverer)
+
+	// notFound and methodNotAllowed handlers
+	mux.NotFound(app.notFoundResponseHandler)
+	mux.MethodNotAllowed(app.methodNotAllowedResponseHandler)
 
 	// Health endpoint for load balancers
 	mux.Get("/health", app.healthCheckHandler)
@@ -33,9 +36,8 @@ func (app *application) Routes() *chi.Mux {
 
 	// API version 1 routes
 	v1 := mux.Group(func(r chi.Router) {
-		r.Get("/hello", func(w http.ResponseWriter, r *http.Request) {
-			response.JSON(w, http.StatusOK, map[string]string{"message": "Hello World"})
-		})
+		r.Post("/shorten", app.createTinyURLHandler)
+		r.Get("/resolve/{short}", app.resolveTinyURLHandler)
 	})
 
 	mux.Mount("/v1", v1)

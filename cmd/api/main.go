@@ -12,6 +12,7 @@ import (
 
 	"github.com/arafetki/go-tiny-url-webapp/assets"
 	"github.com/arafetki/go-tiny-url-webapp/internal/config"
+	"github.com/arafetki/go-tiny-url-webapp/internal/data"
 	database "github.com/arafetki/go-tiny-url-webapp/internal/db"
 	"github.com/arafetki/go-tiny-url-webapp/internal/env"
 	"github.com/arafetki/go-tiny-url-webapp/internal/logging"
@@ -19,10 +20,11 @@ import (
 )
 
 type application struct {
-	cfg    config.Config
-	logger *slog.Logger
-	tmpl   *template.Template
-	wg     sync.WaitGroup
+	cfg        config.Config
+	logger     *slog.Logger
+	tmpl       *template.Template
+	repository *data.Reposiroty
+	wg         sync.WaitGroup
 }
 
 func main() {
@@ -70,9 +72,10 @@ func main() {
 	}
 
 	app := &application{
-		cfg:    cfg,
-		logger: logger,
-		tmpl:   tmpl,
+		cfg:        cfg,
+		logger:     logger,
+		tmpl:       tmpl,
+		repository: data.NewRepo(db),
 	}
 
 	err = app.start()
