@@ -29,18 +29,19 @@ func (app *application) Routes() *chi.Mux {
 
 	// HomePage
 	mux.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		app.tmpl.ExecuteTemplate(w, "home.html", map[string]any{
+		err := app.tmpl.ExecuteTemplate(w, "home.html", map[string]any{
 			"name": "Arafet",
 		})
+		if err != nil {
+			app.internalServerErrorResponseHandler(w, r, err)
+		}
 	})
 
 	// API version 1 routes
-	v1 := mux.Group(func(r chi.Router) {
-		r.Post("/shorten", app.createTinyURLHandler)
-		r.Get("/resolve/{short}", app.resolveTinyURLHandler)
+	mux.Route("/v1", func(r chi.Router) {
+		r.Post("/tinyurl", app.createTinyURLHandler)
+		r.Get("/tinyurl/{short}", app.resolveTinyURLHandler)
 	})
-
-	mux.Mount("/v1", v1)
 
 	return mux
 }

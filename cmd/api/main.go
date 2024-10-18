@@ -19,6 +19,7 @@ import (
 	"github.com/arafetki/go-tiny-url-webapp/internal/nanoid"
 	"github.com/arafetki/go-tiny-url-webapp/internal/version"
 	"github.com/go-playground/validator/v10"
+	"github.com/patrickmn/go-cache"
 )
 
 type application struct {
@@ -27,6 +28,7 @@ type application struct {
 	tmpl       *template.Template
 	repository *data.Reposiroty
 	validate   *validator.Validate
+	cache      *cache.Cache
 	wg         sync.WaitGroup
 }
 
@@ -83,6 +85,7 @@ func main() {
 		tmpl:       tmpl,
 		repository: data.NewRepo(db),
 		validate:   validate,
+		cache:      cache.New(20*time.Minute, 25*time.Minute),
 	}
 
 	err = app.start()

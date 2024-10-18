@@ -11,7 +11,9 @@ import (
 	"github.com/arafetki/go-tiny-url-webapp/internal/nanoid"
 	"github.com/arafetki/go-tiny-url-webapp/internal/request"
 	"github.com/arafetki/go-tiny-url-webapp/internal/response"
+	"github.com/arafetki/go-tiny-url-webapp/internal/utils"
 	"github.com/go-chi/chi/v5"
+	"github.com/patrickmn/go-cache"
 )
 
 func (app *application) createTinyURLHandler(w http.ResponseWriter, r *http.Request) {
@@ -67,6 +69,20 @@ func (app *application) resolveTinyURLHandler(w http.ResponseWriter, r *http.Req
 		return
 	}
 
+	if cachedTinyURL, found := app.cache.Get(short); found {
+
+		tinyurl := cachedTinyURL.(*models.TinyURL)
+		if utils.IsExpired(tinyurl.Expiry) {
+			app.errorResponse(w, r, http.StatusGone, "the requested resource has expired and is no longer available", nil)
+			return
+		}
+		app.logger.Info("cache hit")
+		http.Redirect(w, r, tinyurl.Long, http.StatusMovedPermanently)
+		return
+	}
+
+	app.logger.Info("cache miss")
+
 	tinyurl, err := app.repository.TinyURL.Get(strings.ToLower(short))
 	if err != nil {
 		switch {
@@ -78,10 +94,12 @@ func (app *application) resolveTinyURLHandler(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	if time.Now().After(tinyurl.Expiry) {
+	if utils.IsExpired(tinyurl.Expiry) {
 		app.errorResponse(w, r, http.StatusGone, "the requested resource has expired and is no longer available", nil)
 		return
 	}
+
+	app.cache.Set(tinyurl.Short, tinyurl, cache.DefaultExpiration)
 
 	http.Redirect(w, r, tinyurl.Long, http.StatusMovedPermanently)
 }
