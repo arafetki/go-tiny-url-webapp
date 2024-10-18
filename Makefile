@@ -90,22 +90,22 @@ migrations/new:
 .PHONY: migrations/up
 ## apply all up database migrations
 migrations/up:
-	go run -tags 'sqlite3' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path=./assets/migrations -database="sqlite3://${DB_DSN}" up
+	go run -tags 'sqlite3' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path=./assets/migrations -database="sqlite3://${DATABASE_DSN}" up
 
 
 .PHONY: migrations/down
 ## apply all down database migrations
 migrations/down:
-	go run -tags 'sqlite3' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path=./assets/migrations -database="sqlite3://${DB_DSN}" down
+	go run -tags 'sqlite3' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path=./assets/migrations -database="sqlite3://${DATABASE_DSN}" down
 
 
 .PHONY: migrations/goto
 ## migrate to a specific version number
 migrations/goto:
-	go run -tags 'sqlite3' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path=./assets/migrations -database="sqlite3://${DB_DSN}" goto ${version}
+	go run -tags 'sqlite3' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path=./assets/migrations -database="sqlite3://${DATABASE_DSN}" goto ${version}
 
 
 .PHONY: migrations/version
 ## print the current in-use migration version
 migrations/version:
-	go run -tags 'sqlite3' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path=./assets/migrations -database="sqlite3://${DB_DSN}" version
+	go run -tags 'sqlite3' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path=./assets/migrations -database="sqlite3://${DATABASE_DSN}" version

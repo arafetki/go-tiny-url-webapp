@@ -16,7 +16,9 @@ import (
 	database "github.com/arafetki/go-tiny-url-webapp/internal/db"
 	"github.com/arafetki/go-tiny-url-webapp/internal/env"
 	"github.com/arafetki/go-tiny-url-webapp/internal/logging"
+	"github.com/arafetki/go-tiny-url-webapp/internal/nanoid"
 	"github.com/arafetki/go-tiny-url-webapp/internal/version"
+	"github.com/go-playground/validator/v10"
 )
 
 type application struct {
@@ -24,6 +26,7 @@ type application struct {
 	logger     *slog.Logger
 	tmpl       *template.Template
 	repository *data.Reposiroty
+	validate   *validator.Validate
 	wg         sync.WaitGroup
 }
 
@@ -71,11 +74,15 @@ func main() {
 		os.Exit(1)
 	}
 
+	validate := validator.New(validator.WithRequiredStructEnabled())
+	validate.RegisterValidation("nanoid_charset", nanoid.CharsetValidate)
+
 	app := &application{
 		cfg:        cfg,
 		logger:     logger,
 		tmpl:       tmpl,
 		repository: data.NewRepo(db),
+		validate:   validate,
 	}
 
 	err = app.start()
