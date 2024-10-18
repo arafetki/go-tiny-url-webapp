@@ -69,7 +69,7 @@ func (app *application) resolveTinyURLHandler(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	if cachedTinyURL, found := app.cache.Get(short); found {
+	if cachedTinyURL, found := app.cache.Get(strings.ToLower(short)); found {
 
 		tinyurl := cachedTinyURL.(*models.TinyURL)
 		if utils.IsExpired(tinyurl.Expiry) {
