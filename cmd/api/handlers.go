@@ -76,12 +76,9 @@ func (app *application) resolveTinyURLHandler(w http.ResponseWriter, r *http.Req
 			app.errorResponse(w, r, http.StatusGone, "the requested resource has expired and is no longer available", nil)
 			return
 		}
-		app.logger.Info("cache hit")
 		http.Redirect(w, r, tinyurl.Long, http.StatusMovedPermanently)
 		return
 	}
-
-	app.logger.Info("cache miss")
 
 	tinyurl, err := app.repository.TinyURL.Get(strings.ToLower(short))
 	if err != nil {
