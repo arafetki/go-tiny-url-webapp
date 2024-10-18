@@ -29,7 +29,7 @@ func Pool(dsn string, automigrate bool, opts Options) (*DB, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	db, err := sqlx.ConnectContext(ctx, "sqlite3", dsn)
+	db, err := sqlx.ConnectContext(ctx, "sqlite3", "file:"+dsn+"?cache=shared&mode=rwc")
 	if err != nil {
 		return nil, err
 	}
@@ -49,11 +49,13 @@ func Pool(dsn string, automigrate bool, opts Options) (*DB, error) {
 			return nil, err
 		}
 		err = migrator.Up()
-		switch {
-		case errors.Is(err, migrate.ErrNoChange):
-			break
-		default:
-			return nil, err
+		if err != nil {
+			switch {
+			case errors.Is(err, migrate.ErrNoChange):
+				break
+			default:
+				return nil, err
+			}
 		}
 	}
 
