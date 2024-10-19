@@ -18,16 +18,22 @@ var (
 	ErrNotFound = errors.New("record not found")
 )
 
-func (turl TinyURLRepo) Create(tinyurl *models.TinyURL) error {
+func (turl TinyURLRepo) Create(tinyURL *models.TinyURL) error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 4*time.Second)
 	defer cancel()
 
 	query := `INSERT INTO tinyurls (short,long,expiry) VALUES ($1,$2,$3) RETURNING created;`
+	stmt, err := turl.db.Preparex(query)
+	if err != nil {
+		return err
+	}
 
-	args := []any{tinyurl.Short, tinyurl.Long, tinyurl.Expiry}
+	defer stmt.Close()
 
-	return turl.db.QueryRowxContext(ctx, query, args...).Scan(&tinyurl.Created)
+	args := []any{tinyURL.Short, tinyURL.Long, tinyURL.Expiry}
+
+	return stmt.QueryRowxContext(ctx, args...).Scan(&tinyURL.Created)
 }
 
 func (turl TinyURLRepo) Get(short string) (*models.TinyURL, error) {
@@ -37,9 +43,16 @@ func (turl TinyURLRepo) Get(short string) (*models.TinyURL, error) {
 
 	query := `SELECT * FROM tinyurls WHERE short=$1;`
 
+	stmt, err := turl.db.Preparex(query)
+	if err != nil {
+		return nil, err
+	}
+
+	defer stmt.Close()
+
 	var tinyurl models.TinyURL
 
-	err := turl.db.QueryRowxContext(ctx, query, short).Scan(
+	err = stmt.QueryRowxContext(ctx, short).Scan(
 		&tinyurl.Short,
 		&tinyurl.Long,
 		&tinyurl.Expiry,

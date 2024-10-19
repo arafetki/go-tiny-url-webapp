@@ -7,7 +7,7 @@ import (
 
 type Reposiroty struct {
 	TinyURL interface {
-		Create(tinyUrl *models.TinyURL) error
+		Create(tinyURL *models.TinyURL) error
 		Get(short string) (*models.TinyURL, error)
 	}
 }
