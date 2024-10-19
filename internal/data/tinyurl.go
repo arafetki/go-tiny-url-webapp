@@ -42,7 +42,6 @@ func (turl TinyURLRepo) Get(short string) (*models.TinyURL, error) {
 	defer cancel()
 
 	query := `SELECT * FROM tinyurls WHERE short=$1;`
-
 	stmt, err := turl.db.Preparex(query)
 	if err != nil {
 		return nil, err

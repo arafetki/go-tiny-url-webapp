@@ -10,16 +10,17 @@ import (
 	"sync"
 	"time"
 
+	"github.com/abenk-oss/go-cache"
 	"github.com/arafetki/go-tiny-url-webapp/assets"
 	"github.com/arafetki/go-tiny-url-webapp/internal/config"
 	"github.com/arafetki/go-tiny-url-webapp/internal/data"
 	database "github.com/arafetki/go-tiny-url-webapp/internal/db"
+	"github.com/arafetki/go-tiny-url-webapp/internal/db/models"
 	"github.com/arafetki/go-tiny-url-webapp/internal/env"
 	"github.com/arafetki/go-tiny-url-webapp/internal/logging"
 	"github.com/arafetki/go-tiny-url-webapp/internal/nanoid"
 	"github.com/arafetki/go-tiny-url-webapp/internal/version"
 	"github.com/go-playground/validator/v10"
-	"github.com/patrickmn/go-cache"
 )
 
 type application struct {
@@ -28,7 +29,7 @@ type application struct {
 	tmpl       *template.Template
 	repository *data.Reposiroty
 	validate   *validator.Validate
-	cache      *cache.Cache
+	cache      *cache.Cache[string, *models.TinyURL]
 	wg         sync.WaitGroup
 }
 
@@ -85,7 +86,7 @@ func main() {
 		tmpl:       tmpl,
 		repository: data.NewRepo(db),
 		validate:   validate,
-		cache:      cache.New(20*time.Minute, 25*time.Minute),
+		cache:      cache.New[string, *models.TinyURL](1 * time.Hour),
 	}
 
 	err = app.start()
