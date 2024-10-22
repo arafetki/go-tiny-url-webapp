@@ -1,2 +1,3 @@
-# go-tiny-url-webapp
-Fullstack url-shotener webapp using golang
+# go-tinyurl
+
+Fullstack url-shotener web application written using Go
