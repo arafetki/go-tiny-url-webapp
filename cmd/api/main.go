@@ -1,5 +1,3 @@
-//go:generate pnpm build
-
 package main
 
 import (

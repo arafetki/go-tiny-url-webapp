@@ -1,7 +1,7 @@
 {
     "name": "tinyurl",
     "version": "0.1.0",
-    "description": "Fullstack tinyurl webapp written in Go",
+    "description": "Fullstack tinyurl web application written in Go",
     "scripts": {
         "build": "tailwindcss build -o assets/static/tailwind.css",
         "watch": "tailwindcss build -o assets/static/tailwind.css --watch"

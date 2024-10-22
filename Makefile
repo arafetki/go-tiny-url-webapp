@@ -43,7 +43,7 @@ audit:
 	go run golang.org/x/vuln/cmd/govulncheck@latest ./...
 
 
-.PHONY: run_unit_tests
+.PHONY: test
 ## run unit tests
 test:
 	go test -race -buildvcs -vet=off ./...
@@ -55,7 +55,6 @@ test:
 .PHONY: build
 ## build the application
 build:
-	go generate ${MAIN_PACKAGE_PATH}
 	go build -ldflags='-s -w' -o=./bin/${BINARY_NAME} ${MAIN_PACKAGE_PATH}
 
 .PHONY: run
@@ -63,17 +62,6 @@ build:
 run: 
 	build
 	./bin/${BINARY_NAME}
-
-
-.PHONY: run/live
-## run the application with reloading on file changes
-run/live:
-	go run github.com/air-verse/air@latest \
-		--build.cmd "make build" --build.bin "./bin/${BINARY_NAME}" --build.delay "100" \
-		--build.exclude_dir "" \
-		--build.include_ext "go,html,js,templ,css,sass,json,yaml" \
-		--misc.clean_on_exit "true"
-
 
 
 # ==================================================================================== #
