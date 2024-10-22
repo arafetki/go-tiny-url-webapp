@@ -24,7 +24,7 @@ func (app *application) Routes() *chi.Mux {
 	mux.Get("/health", app.healthCheckHandler)
 
 	// Static files
-	fs := http.FileServer(http.FS(assets.Static))
+	fs := http.FileServer(http.FS(assets.StaticFiles))
 	mux.Handle("/static/*", app.secureFS(fs))
 
 	// HomePage

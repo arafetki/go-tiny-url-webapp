@@ -40,7 +40,7 @@ func Pool(dsn string, automigrate bool, opts Options) (*DB, error) {
 	db.SetConnMaxIdleTime(opts.ConnMaxIdle)
 
 	if automigrate {
-		iofsDriver, err := iofs.New(assets.Migrations, "migrations")
+		iofsDriver, err := iofs.New(assets.MigrationFiles, "migrations")
 		if err != nil {
 			return nil, err
 		}

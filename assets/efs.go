@@ -5,10 +5,10 @@ import (
 )
 
 //go:embed "migrations"
-var Migrations embed.FS
+var MigrationFiles embed.FS
 
 //go:embed "static"
-var Static embed.FS
+var StaticFiles embed.FS
 
 //go:embed "templates"
 var Templates embed.FS

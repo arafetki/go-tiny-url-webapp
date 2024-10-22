@@ -13,7 +13,7 @@ require (
 )
 
 require (
-	github.com/abenk-oss/go-cache v0.1.0
+	github.com/abenk-oss/go-cache v1.0.0
 	github.com/go-playground/validator/v10 v10.22.1
 	github.com/matoous/go-nanoid/v2 v2.1.0
 )
