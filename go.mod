@@ -1,4 +1,4 @@
-module github.com/arafetki/go-tiny-url-webapp
+module github.com/arafetki/go-tinyurl
 
 go 1.23.2
 

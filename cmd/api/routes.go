@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/arafetki/go-tiny-url-webapp/assets"
+	"github.com/arafetki/go-tinyurl/assets"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )

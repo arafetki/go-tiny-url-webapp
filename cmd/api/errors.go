@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/arafetki/go-tiny-url-webapp/internal/response"
+	"github.com/arafetki/go-tinyurl/internal/response"
 )
 
 func (app *application) logError(r *http.Request, err error) {

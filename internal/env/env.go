@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/arafetki/go-tiny-url-webapp/internal/config"
+	"github.com/arafetki/go-tinyurl/internal/config"
 )
 
 func GetString(key string, defaultValue string) string {

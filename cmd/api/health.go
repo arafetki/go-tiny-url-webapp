@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/arafetki/go-tiny-url-webapp/internal/response"
+	"github.com/arafetki/go-tinyurl/internal/response"
 )
 
 func (app *application) healthCheckHandler(w http.ResponseWriter, r *http.Request) {

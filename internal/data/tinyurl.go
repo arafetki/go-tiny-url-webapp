@@ -6,8 +6,8 @@ import (
 	"errors"
 	"time"
 
-	database "github.com/arafetki/go-tiny-url-webapp/internal/db"
-	"github.com/arafetki/go-tiny-url-webapp/internal/db/models"
+	database "github.com/arafetki/go-tinyurl/internal/db"
+	"github.com/arafetki/go-tinyurl/internal/db/models"
 )
 
 type TinyURLRepo struct {

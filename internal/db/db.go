@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/arafetki/go-tiny-url-webapp/assets"
+	"github.com/arafetki/go-tinyurl/assets"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/sqlite3"
 	"github.com/golang-migrate/migrate/v4/source/iofs"

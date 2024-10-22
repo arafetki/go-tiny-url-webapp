@@ -6,12 +6,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/arafetki/go-tiny-url-webapp/internal/data"
-	"github.com/arafetki/go-tiny-url-webapp/internal/db/models"
-	"github.com/arafetki/go-tiny-url-webapp/internal/nanoid"
-	"github.com/arafetki/go-tiny-url-webapp/internal/request"
-	"github.com/arafetki/go-tiny-url-webapp/internal/response"
-	"github.com/arafetki/go-tiny-url-webapp/internal/utils"
+	"github.com/arafetki/go-tinyurl/internal/data"
+	"github.com/arafetki/go-tinyurl/internal/db/models"
+	"github.com/arafetki/go-tinyurl/internal/nanoid"
+	"github.com/arafetki/go-tinyurl/internal/request"
+	"github.com/arafetki/go-tinyurl/internal/response"
+	"github.com/arafetki/go-tinyurl/internal/utils"
 	"github.com/go-chi/chi/v5"
 )
 
