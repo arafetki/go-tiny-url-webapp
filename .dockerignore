@@ -5,6 +5,9 @@ nginx
 tmp
 bin
 node_modules
+package.json
+pnpm-lock.yaml
+tailwind.config.js
 .env*
 LICENSE
 README.md
