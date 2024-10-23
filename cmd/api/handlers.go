@@ -30,7 +30,7 @@ func (app *application) createTinyURLHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	short, err := nanoid.Generate(7)
+	short, err := nanoid.Generate(9)
 	if err != nil {
 		app.internalServerErrorResponseHandler(w, r, err)
 		return
@@ -57,7 +57,7 @@ func (app *application) createTinyURLHandler(w http.ResponseWriter, r *http.Requ
 func (app *application) resolveTinyURLHandler(w http.ResponseWriter, r *http.Request) {
 
 	short := chi.URLParam(r, "short")
-	if err := app.validate.Var(short, "len=7,nanoid_charset"); err != nil {
+	if err := app.validate.Var(short, "len=9,nanoid_charset"); err != nil {
 		app.notFoundResponseHandler(w, r)
 		return
 	}

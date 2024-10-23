@@ -7,7 +7,7 @@ import (
 	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 
-const Charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+const Charset = "abcdefghijklmnopqrstuvwxyz0123456789"
 
 func Generate(size int) (string, error) {
 
