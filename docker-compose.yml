@@ -8,7 +8,6 @@ services:
       - .env
     volumes:
       - app_data:/home/app/data
-      - build_cache:/usr/app/.cache/go-build
     expose:
       - 8080
 
@@ -28,4 +27,3 @@ services:
 volumes:
   app_data:
   nginx_logs:
-  build_cache:
