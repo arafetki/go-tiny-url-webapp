@@ -1,0 +1,31 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Containerfile
+    container_name: tinyurl_app
+    env_file:
+      - .env
+    volumes:
+      - app_data:/home/app/data
+      - build_cache:/usr/app/.cache/go-build
+    expose:
+      - 8080
+
+  nginx:
+    build:
+      context: nginx
+      dockerfile: Dockerfile
+    container_name: tinyurl_nginx
+    depends_on:
+      app:
+        condition: service_started
+    ports:
+      - "8080:80"
+    volumes:
+      - nginx_logs:/var/log/nginx
+
+volumes:
+  app_data:
+  nginx_logs:
+  build_cache:

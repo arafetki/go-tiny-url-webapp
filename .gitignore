@@ -30,3 +30,4 @@ bin
 tmp
 node_modules
 .vscode
+data

@@ -1,0 +1,17 @@
+.vscode
+.git
+data
+nginx
+tmp
+bin
+node_modules
+.env*
+LICENSE
+README.md
+sqlite.db
+.gitignore
+.dockerignore
+.air.toml
+Containerfile
+Dockerfile
+docker-compose.yml

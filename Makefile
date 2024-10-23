@@ -30,8 +30,8 @@ help:
 .PHONY: tidy
 ## format code and tidy modfile
 tidy:
-	go mod tidy -v
-	go fmt ./...
+	@go mod tidy -v
+	@go fmt ./...
 
 
 .PHONY: audit
@@ -46,7 +46,7 @@ audit:
 .PHONY: test
 ## run unit tests
 test:
-	go test -race -buildvcs -vet=off ./...
+	@go test -race -buildvcs -vet=off ./...
 
 # ==================================================================================== #
 # DEVELOPMENT
@@ -59,9 +59,43 @@ build:
 
 .PHONY: run
 ## run the application
-run: 
-	build
-	./bin/${BINARY_NAME}
+run: build
+	@./bin/${BINARY_NAME}
+
+
+
+# ==================================================================================== #
+# Docker
+# ==================================================================================== #
+
+.PHONY: docker/build
+## name=$1: build docker image
+docker/build:
+	docker buildx build -t ${name} -f Containerfile .
+
+
+.PHONY: compose/build
+## build compose services
+compose/build:
+	docker compose build
+
+
+.PHONY: compose/up
+## build and start compose services in detached mode
+compose/up:
+	docker compose up -d
+
+
+.PHONY: compose/logs
+## svc=$1: display logs from a specific compose service
+compose/logs:
+	docker compose logs -f ${svc}
+
+
+.PHONY: compose/down
+## bring down all compose services
+compose/down:
+	docker compose down
 
 
 # ==================================================================================== #
@@ -70,30 +104,31 @@ run:
 
 
 .PHONY: migrations/new
-## create a new database migration
+## name=$1: create a new database migration
 migrations/new:
-	go run -tags 'sqlite3' github.com/golang-migrate/migrate/v4/cmd/migrate@latest create -seq -ext=.sql -dir=./assets/migrations ${name}
+	@go run -tags 'sqlite3' github.com/golang-migrate/migrate/v4/cmd/migrate@latest create -seq -ext=.sql -dir=./assets/migrations ${name}
 
 
 .PHONY: migrations/up
 ## apply all up database migrations
 migrations/up:
-	go run -tags 'sqlite3' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path=./assets/migrations -database="sqlite3://${DATABASE_DSN}" up
+	@go run -tags 'sqlite3' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path=./assets/migrations -database="sqlite3://${DATABASE_DSN}" up
 
 
 .PHONY: migrations/down
 ## apply all down database migrations
 migrations/down:
-	go run -tags 'sqlite3' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path=./assets/migrations -database="sqlite3://${DATABASE_DSN}" down
+	@go run -tags 'sqlite3' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path=./assets/migrations -database="sqlite3://${DATABASE_DSN}" down
 
 
 .PHONY: migrations/goto
-## migrate to a specific version number
+## version=$1: migrate to a specific version number
 migrations/goto:
-	go run -tags 'sqlite3' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path=./assets/migrations -database="sqlite3://${DATABASE_DSN}" goto ${version}
+	@go run -tags 'sqlite3' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path=./assets/migrations -database="sqlite3://${DATABASE_DSN}" goto ${version}
 
 
 .PHONY: migrations/version
 ## print the current in-use migration version
 migrations/version:
-	go run -tags 'sqlite3' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path=./assets/migrations -database="sqlite3://${DATABASE_DSN}" version
+	@go run -tags 'sqlite3' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path=./assets/migrations -database="sqlite3://${DATABASE_DSN}" version
+

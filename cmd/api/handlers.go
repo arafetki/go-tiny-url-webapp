@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/arafetki/go-tinyurl/internal/data"
@@ -21,14 +20,12 @@ func (app *application) createTinyURLHandler(w http.ResponseWriter, r *http.Requ
 		LongURL string `json:"long_url" validate:"http_url"`
 	}
 
-	err := request.DecodeJSONStrict(w, r, &input)
-	if err != nil {
+	if err := request.DecodeJSONStrict(w, r, &input); err != nil {
 		app.badRequestResponseHandler(w, r, err)
 		return
 	}
 
-	err = app.validate.Struct(input)
-	if err != nil {
+	if err := app.validate.Struct(input); err != nil {
 		app.badRequestResponseHandler(w, r, err)
 		return
 	}
@@ -40,21 +37,19 @@ func (app *application) createTinyURLHandler(w http.ResponseWriter, r *http.Requ
 	}
 
 	tinyurl := &models.TinyURL{
-		Short:  strings.ToLower(short),
+		Short:  short,
 		Long:   input.LongURL,
-		Expiry: time.Now().Add(24 * time.Hour),
+		Expiry: time.Now().Add(720 * time.Hour),
 	}
 
-	err = app.repository.TinyURL.Create(tinyurl)
-	if err != nil {
+	if err := app.repository.TinyURL.Create(tinyurl); err != nil {
 		app.internalServerErrorResponseHandler(w, r, err)
 		return
 	}
 
-	err = response.JSON(w, http.StatusCreated, envelope{
+	if err := response.JSON(w, http.StatusCreated, envelope{
 		"data": tinyurl,
-	})
-	if err != nil {
+	}); err != nil {
 		app.internalServerErrorResponseHandler(w, r, err)
 	}
 }
@@ -62,19 +57,18 @@ func (app *application) createTinyURLHandler(w http.ResponseWriter, r *http.Requ
 func (app *application) resolveTinyURLHandler(w http.ResponseWriter, r *http.Request) {
 
 	short := chi.URLParam(r, "short")
-	err := app.validate.Var(short, "len=7,nanoid_charset")
-	if err != nil {
+	if err := app.validate.Var(short, "len=7,nanoid_charset"); err != nil {
 		app.notFoundResponseHandler(w, r)
 		return
 	}
 
-	if cachedTinyURL, found := app.cache.Get(strings.ToLower(short)); found {
+	if cachedTinyURL, found := app.cache.Get(short); found {
 
 		http.Redirect(w, r, cachedTinyURL.Long, http.StatusMovedPermanently)
 		return
 	}
 
-	tinyurl, err := app.repository.TinyURL.Get(strings.ToLower(short))
+	tinyurl, err := app.repository.TinyURL.Get(short)
 	if err != nil {
 		switch {
 		case errors.Is(err, data.ErrNotFound):
@@ -90,7 +84,7 @@ func (app *application) resolveTinyURLHandler(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	app.cache.Set(tinyurl.Short, tinyurl, 23*time.Hour)
+	app.cache.Set(tinyurl.Short, tinyurl, 24*time.Hour)
 
 	http.Redirect(w, r, tinyurl.Long, http.StatusMovedPermanently)
 }
